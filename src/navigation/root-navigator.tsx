@@ -11,8 +11,11 @@ import {
   SignIn,
   SignUp,
   Statistic,
+  IncomeCategories,
+  ExpenseCategories
 } from '@screens';
 import {useSelector} from 'react-redux';
+// import { IncomeCategories } from 'src/screens/income-categories/income-categories';
 import {CreateCost} from '../screens/create-cost/create-cost';
 import {BottomTabNavigator} from './bottom-tab-navigator';
 import {RootStackParamList} from './types/root-navigator.types';
@@ -42,6 +45,8 @@ export const RootNavigator = () => {
           component={CreateCategory}
         />
         <Stack.Screen name={SCREENS.EDIT_CATEGORY} component={EditCategory} />
+        <Stack.Screen name={SCREENS.CATEGORIES_INCOME} component={IncomeCategories} />
+        <Stack.Screen name={SCREENS.CATEGORIES_EXPENSE} component={ExpenseCategories} />
       </Stack.Group>
       <Stack.Group>
         <Stack.Screen name={SCREENS.CREATE_COST} component={CreateCost} />

@@ -26,7 +26,9 @@ const useEditCost = () => {
   const {item, key} = route.params;
 
   // Redux state
-  const categories = useSelector((state: RootState) => state.categories.data);
+  const categories =  key == 'incomes' ? useSelector((state: RootState) => state.categories.data) : useSelector((state: RootState) => state?.expenseCategories?.data);
+  // const expenseCategories = useSelector((state: RootState) => state?.expenseCategories?.data);
+
   const accessToken = useSelector(
     (state: RootState) => state.user.token.access,
   );
@@ -37,7 +39,7 @@ const useEditCost = () => {
     key == 'incomes' ? 'Chỉnh sửa thu nhập' : 'Chỉnh sửa chi tiêu';
 
   const initialValues = {
-    category: item.category_id,
+    category: key == 'incomes' ? item.income_category_id : item.expense_category_id,
     description: item?.description,
     date: item?.date,
     amount: item.amount.toString(),
@@ -220,6 +222,7 @@ const useEditCost = () => {
     handleBlur,
     headerTitle,
     categories,
+    
     onPressButton,
     handleDelete,
     onPressSetting,

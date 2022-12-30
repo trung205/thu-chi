@@ -15,12 +15,11 @@ export const Home: React.FC = () => {
     incomes,
     expenses,
     categories,
-
+    expenseCategories,
     handleFabButton,
     onPressItemIncome,
     onPressItemExpense,
   } = useHome();
-
   const ListIncomes = () => {
     return (
       <>
@@ -29,7 +28,7 @@ export const Home: React.FC = () => {
           data={incomes}
           renderItem={({item, index}) => {
             const itemCategory = categories.find(category =>
-              item.category_id.includes(category.id),
+              item.id.includes(category.id),
             );
             return (
               <ItemCost
@@ -55,8 +54,8 @@ export const Home: React.FC = () => {
           contentContainerStyle={{paddingHorizontal: 20}}
           data={expenses}
           renderItem={({item, index}) => {
-            const itemCategory = categories.find(category =>
-              item.category_id.includes(category.id),
+            const itemCategory = expenseCategories.find(category =>
+              item.id.includes(category.id),
             );
 
             return (

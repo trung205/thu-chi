@@ -4,3 +4,4 @@ export * from './user.slice';
 export * from './categories.slice';
 export * from './incomes.slice';
 export * from './expenses.slice';
+export * from './expense-categories.slice';

@@ -14,12 +14,11 @@ export const CreateCost: React.FC = () => {
     setFieldValue,
     setFieldTouched,
     handleBlur,
-
+    expenseCategories,
     categories,
     onPressButton,
     onPressSetting,
   } = useCreateCost();
-
   return (
     <>
       <Header isBack title="Thêm mới" />
@@ -44,7 +43,7 @@ export const CreateCost: React.FC = () => {
               setFieldTouched('type', true, true);
             }}
           />
-          <Dropdown
+          {values.type && <Dropdown
             required
             label="Danh mục"
             value={values.category}
@@ -52,7 +51,7 @@ export const CreateCost: React.FC = () => {
               setFieldValue('category', value);
               setFieldTouched('category', true, false);
             }}
-            data={categories}
+            data={values.type == 'incomes' ? categories : expenseCategories}
             scheme={{label: 'name', value: 'id'}}
             messageError={
               touched.category && errors.category ? errors.category : undefined
@@ -62,7 +61,8 @@ export const CreateCost: React.FC = () => {
             }}
             isIconSetting
             onPressSetting={onPressSetting}
-          />
+          />}
+          
           <DatePickerModal
             required
             placeholder="Chọn ngày"

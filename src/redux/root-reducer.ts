@@ -6,11 +6,13 @@ import userReducer from './slices/user.slice';
 import categoriesReducer from './slices/categories.slice';
 import incomesReducer from './slices/incomes.slice';
 import expensesReducer from './slices/expenses.slice';
+import expenseCategoriesReducer  from './slices/expense-categories.slice'; 
 const rootReducer = combineReducers({
   app: appReducer,
   alert: alertReducer,
   user: userReducer,
   categories: categoriesReducer,
+  expenseCategories: expenseCategoriesReducer,
   incomes: incomesReducer,
   expenses: expensesReducer,
 });

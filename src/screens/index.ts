@@ -10,3 +10,5 @@ export * from './create-cost/create-cost';
 export * from './edit-cost/edit-cost';
 export * from './change-password/change-password';
 export * from './chart/chart';
+export * from './income-categories/income-categories';
+export * from './expense-categories/expense-categories';

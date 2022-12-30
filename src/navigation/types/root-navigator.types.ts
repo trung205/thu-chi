@@ -10,6 +10,8 @@ export type RootStackParamList = {
     isBack: boolean;
   };
   [SCREENS.CREATE_CATEGORY]: undefined;
+  [SCREENS.CATEGORIES_EXPENSE]: undefined;
+  [SCREENS.CATEGORIES_INCOME]: undefined;
   [SCREENS.EDIT_CATEGORY]: {
     item: Category;
   };

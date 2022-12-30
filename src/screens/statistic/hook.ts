@@ -127,7 +127,7 @@ const useStatistic = () => {
   useEffect(() => {
     showLoading();
     axios
-      .get(`${API_URL}/statistic`, {
+      .get(`${API_URL}/statistic/common`, {
         headers: {Authorization: `Bearer ${accessToken}`},
         params: {
           start_date: getValueStartDate(),

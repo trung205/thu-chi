@@ -5,4 +5,6 @@ export interface Cost {
   description: string;
   date: string;
   amount: string;
+  expense_category_id: string
+  income_category_id: string
 }

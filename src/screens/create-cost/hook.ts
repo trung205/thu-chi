@@ -15,6 +15,8 @@ const useCreateCost = () => {
   const {showLoading, hideLoading} = useLoading();
 
   const categories = useSelector((state: RootState) => state.categories.data);
+  const expenseCategories = useSelector((state: RootState) => state?.expenseCategories?.data);
+
 
   const initialValues = {
     type: '',
@@ -59,7 +61,7 @@ const useCreateCost = () => {
       .post(
         `${API_URL}/incomes`,
         {
-          category_id: values.category,
+          income_category_id: values.category,
           description: values.description,
           amount: values.amount,
           date: values.date,
@@ -86,7 +88,7 @@ const useCreateCost = () => {
       .post(
         `${API_URL}/expenses`,
         {
-          category_id: values.category,
+          expense_category_id: values.category,
           description: values.description,
           amount: values.amount,
           date: values.date,
@@ -136,7 +138,7 @@ const useCreateCost = () => {
     setFieldValue,
     setFieldTouched,
     handleBlur,
-
+    expenseCategories,
     categories,
     onPressButton,
     onPressSetting,

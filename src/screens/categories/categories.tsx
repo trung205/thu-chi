@@ -1,16 +1,45 @@
-import {Divider, FabButton, Header, Text} from '@components';
+import {Divider, FabButton, Header, ItemProfile, ItemProfileProps, Text} from '@components';
+import { SCREENS } from '@constants';
+import { useNavigation } from '@react-navigation/native';
 import React from 'react';
-import {FlatList, TouchableOpacity} from 'react-native';
+import {FlatList, TouchableOpacity, View} from 'react-native';
 import useCategories from './hook';
 import {styles} from './styles';
+import {useTheme} from '@hooks';
+
 
 export const Categories: React.FC = () => {
-  const {categories, onPressItem, onPressFab} = useCategories();
+  const navigation = useNavigation<any>();
+  const {colors} = useTheme();
 
+  const listItem: ItemProfileProps[] = [
+    {
+      text: 'Thu nhập',
+      secondaryText: '',
+      icon: {
+        name: 'moon',
+        type: 'ionicon',
+      },
+      iconBg: '#1c87fa',
+      onPress: () => { navigation.navigate(SCREENS.CATEGORIES_INCOME)},
+    },
+    {
+      text: 'Chi tiêu',
+      secondaryText: '',
+      icon: {
+        name: 'apps',
+        type: 'ionicon',
+      },
+      iconBg: 'orange',
+      onPress: () => {
+        navigation.navigate(SCREENS.CATEGORIES_EXPENSE);
+      },
+    },
+  ];
   return (
     <>
       <Header isBack title="Quản lý danh mục" />
-      <FlatList
+      {/* <FlatList
         contentContainerStyle={styles.container}
         data={categories}
         renderItem={({item}) => {
@@ -26,7 +55,26 @@ export const Categories: React.FC = () => {
         }}
         ItemSeparatorComponent={() => <Divider />}
       />
-      <FabButton style={styles.fab} onPress={onPressFab} />
+      <FabButton style={styles.fab} onPress={onPressFab} /> */}
+      <FlatList
+        contentContainerStyle={[styles.list, {backgroundColor: colors.card}]}
+        showsHorizontalScrollIndicator={false}
+        showsVerticalScrollIndicator={false}
+        data={listItem}
+        renderItem={({item, index}) => {
+          return (
+            <View key={index}>
+              <ItemProfile
+                text={item.text}
+                icon={item.icon}
+                iconBg={item.iconBg}
+                onPress={item.onPress}
+              />
+            </View>
+          );
+        }}
+        ItemSeparatorComponent={() => <Divider />}
+      />
     </>
   );
 };
