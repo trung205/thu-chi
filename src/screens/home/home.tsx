@@ -28,7 +28,7 @@ export const Home: React.FC = () => {
           data={incomes}
           renderItem={({item, index}) => {
             const itemCategory = categories.find(category =>
-              item.id.includes(category.id),
+              item.income_category_id.includes(category.id),
             );
             return (
               <ItemCost
@@ -55,7 +55,7 @@ export const Home: React.FC = () => {
           data={expenses}
           renderItem={({item, index}) => {
             const itemCategory = expenseCategories.find(category =>
-              item.id.includes(category.id),
+              item.expense_category_id.includes(category.id),
             );
 
             return (

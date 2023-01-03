@@ -32,8 +32,9 @@ const useChart = () => {
   const refChooseYear = useRef<Modalize>();
   const refChooseMonthYear = useRef<Modalize>();
   const [visibleDatePicker, setVisbleDatePicker] = useState(false);
-  const [type, setType] = useState(ChartType.ALL);
+  const [type, setType] = useState(ChartType.INCOMES);
   const [filter, setFilter] = useState(ChartFilter.MONTHS);
+  const [url, setUrl] = useState('income')
   const {showLoading, hideLoading} = useLoading();
 
   //  Redux state
@@ -86,16 +87,19 @@ const useChart = () => {
   const chartType = () => {
     switch (type) {
       case ChartType.INCOMES:
+        setUrl('income')
         return {
           showIncomes: true,
           showExpenses: false,
         };
       case ChartType.EXPENSES:
+        setUrl('expense')
         return {
           showIncomes: false,
           showExpenses: true,
         };
       case ChartType.ALL:
+        setUrl('common')
         return {
           showIncomes: true,
           showExpenses: true,
@@ -108,8 +112,20 @@ const useChart = () => {
   };
 
   const onPressItemTypePicker = (item: {label: string; key: ChartType}) => {
+    console.log(item)
     refType.current?.close();
     setType(item.key);
+    switch (item.key) {
+      case ChartType.INCOMES:
+        setUrl('income')
+        break;
+      case ChartType.EXPENSES:
+        setUrl('expense')
+        break;
+      case ChartType.ALL:
+        setUrl('common')
+        break;
+    }
   };
 
   const showFilter = () => {
@@ -157,6 +173,7 @@ const useChart = () => {
   };
 
   const [dataChart, setDataChart] = useState<DataChart[]>([]);
+  const [pieValue, setPieValue] = useState<any[]>([]);
 
   const renderFieldDate = () => {
     switch (filter) {
@@ -238,9 +255,12 @@ const useChart = () => {
 
   useEffect(() => {
     if (filter !== ChartFilter.YEARS) {
+      // console.log(getValueStartDate(), getValueEndDate())
+      console.log(url)
+
       showLoading();
       axios
-        .get(`${API_URL}/statistic`, {
+        .get(`${API_URL}/statistic/${url}`, {
           headers: {Authorization: `Bearer ${accessToken}`},
           params: {
             start_date: getValueStartDate(),
@@ -248,27 +268,38 @@ const useChart = () => {
           },
         })
         .then(function (response) {
-          const result: Statistic[] = response.data.data;
-          let newArray: DataChart[] = [];
-          result.map(e => {
-            let newObj: DataChart = {
-              incomes: e.total_incomes,
-              expenses: e.total_expenses,
-              label:
-                filter == ChartFilter.DATES
-                  ? moment(e.date, 'YYYY-MM-DD').format('DD/MM')
-                  : moment(e.date, 'YYYY-MM-DD').format('DD'),
-            };
-            newArray.push(newObj);
-          });
-          setDataChart(newArray);
+          const result: any[] = response.data;
+          let newArray: any[] = [];
+          for (const key in result) {
+            // console.log(key)
+            if (key !== 'total_incomes' && key !== 'total_expenses' && result[key] !== 0) {
+              let newObj: any ={
+                value: result[key],
+                label: key
+              }
+              newArray.push(newObj);
+            }
+          }
+          // result.map(e => {
+          //   let newObj: DataChart = {
+          //     incomes: e.total_incomes,
+          //     expenses: e.total_expenses,
+          //     label:
+          //       filter == ChartFilter.DATES
+          //         ? moment(e.date, 'YYYY-MM-DD').format('DD/MM')
+          //         : moment(e.date, 'YYYY-MM-DD').format('DD'),
+          //   };
+          //   newArray.push(newObj);
+          // });
+          // setDataChart(newArray);
+          setPieValue(newArray)
           hideLoading();
         })
         .catch(function (error) {
           hideLoading();
         });
     }
-  }, [filter, valueMonthYear, startDate, endDate]);
+  }, [filter, valueMonthYear, startDate, endDate, type]);
 
   return {
     refType,
@@ -301,6 +332,7 @@ const useChart = () => {
     setEndDate,
     startDate,
     setStartDate,
+    pieValue,
   };
 };
 export default useChart;

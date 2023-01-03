@@ -16,7 +16,7 @@ export const IS_IOS = Platform.OS == 'ios';
 
 export const BASE_PADDING = 16;
 
-export const API_URL = ' https://spiderpig83.pythonanywhere.com/api/v1';
+export const API_URL = 'https://spiderpig83.pythonanywhere.com/api/v1';
 
 export const CONTAINER_HEIGHT = 50 * 5;
 export const ITEM_HEIGHT = 50;

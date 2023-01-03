@@ -52,6 +52,10 @@ const useSignIn = () => {
 
   const callApi = () => {
     showLoading();
+    console.log(
+      'trung'
+    )
+
     axios
       .post(`${API_URL}/token/auth`, {
         email: values.email,
@@ -105,6 +109,7 @@ const useSignIn = () => {
         hideLoading();
       })
       .catch(function (error) {
+        console.log(error)
         hideLoading();
       });
   };

@@ -12,6 +12,7 @@ import {FlatList, TouchableOpacity, View} from 'react-native';
 import {Modalize} from 'react-native-modalize';
 import useChart from './hook';
 import {styles} from './styles';
+import PureChart from 'react-native-pure-chart';
 
 export const Chart: React.FC = () => {
   const {
@@ -46,7 +47,21 @@ export const Chart: React.FC = () => {
     setEndDate,
     startDate,
     setStartDate,
+    pieValue
   } = useChart();
+  // console.log(pieValue, 'trung')
+  let sampleData = [
+    {
+      value: 50,
+      label: 'Marketing',
+    }, {
+      value: 40,
+      label: 'Sales',
+    }, {
+      value: 25,
+      label: 'Support',
+    }
+  ]
 
   const renderTypePicker = () => {
     return (
@@ -113,11 +128,12 @@ export const Chart: React.FC = () => {
             <Text color={'primary'}>Loại thu tiền</Text>
           </TouchableOpacity>
         </View>
-        <BarChart
+        {/* <BarChart
           showExpenses={chartType().showExpenses}
           showIncomes={chartType().showIncomes}
           data={dataChart}
-        />
+        /> */}
+        {pieValue[0] ? <PureChart data={pieValue} type='pie' /> : null}
       </View>
       <Modalize
         ref={refType}
