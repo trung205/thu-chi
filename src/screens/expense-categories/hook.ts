@@ -11,11 +11,11 @@ const useCategories = () => {
   const categories = useSelector((state: RootState) => state.expenseCategories.data);
 
   const onPressFab = () => {
-    navigation.navigate(SCREENS.CREATE_CATEGORY);
+    navigation.navigate(SCREENS.CREATE_CATEGORY, {key: 'expenses'});
   };
 
   const onPressItem = (item: Category) => {
-    navigation.navigate(SCREENS.EDIT_CATEGORY, {item});
+    navigation.navigate(SCREENS.EDIT_CATEGORY, {item, key: 'expenses'});
   };
 
   return {

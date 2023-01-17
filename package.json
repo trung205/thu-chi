@@ -10,6 +10,7 @@
     "lint": "eslint . --ext .js,.jsx,.ts,.tsx",
     "_your_scripts": "",
     "apk": "cd android &&./gradlew clean && ./gradlew assembleRelease && cd ..",
+    "build-android": "react-native bundle --platform android --dev false --entry-file index.js --bundle-output android/app/src/main/assets/index.android.bundle --assets-dest android/app/src/main/res",
     "app-apk": "cd android &&./gradlew app:assembleRelease && cd ..",
     "variant": "react-native run-android --variant=release",
     "rm-apk": "adb shell pm uninstall --user 0 com.managerExpend",

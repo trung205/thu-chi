@@ -15,7 +15,7 @@ const useCategories = () => {
   };
 
   const onPressItem = (item: Category) => {
-    navigation.navigate(SCREENS.EDIT_CATEGORY, {item});
+    // navigation.navigate(SCREENS.EDIT_CATEGORY, {item});
   };
 
   return {

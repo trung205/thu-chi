@@ -8,6 +8,8 @@ import {
   RootState,
   showAlert,
   updateCategory,
+  updateExpenseCategory,
+  deleteExpenseCategory
 } from '@redux';
 import axios from 'axios';
 import {useFormik} from 'formik';
@@ -22,6 +24,8 @@ const useEditCategory = () => {
 
   //  Params
   const item = route?.params?.item;
+  const type = route?.params?.key;
+  const categories = type == 'incomes' ? 'income-categories' : 'expense-categories';
 
   //  Redux state
   const accessToken = useSelector(
@@ -73,10 +77,12 @@ const useEditCategory = () => {
   };
 
   const callApiEdit = (value: string) => {
+    console.log(value)
+    console.log(item.id)
     showLoading();
     axios
       .put(
-        `${API_URL}/categories/${item.id}`,
+        `${API_URL}/${categories}/${item.id}`,
         {
           name: value,
         },
@@ -85,7 +91,11 @@ const useEditCategory = () => {
         },
       )
       .then(function (response) {
-        dispatch(updateCategory(response.data));
+        if (type == 'incomes') {
+          dispatch(updateCategory(response.data));
+        } else {
+          dispatch(updateExpenseCategory(response.data));
+        }
         navigation.goBack();
         hideLoading();
       })
@@ -104,6 +114,7 @@ const useEditCategory = () => {
           );
           hideLoading();
         } else {
+          console.log(error)
           hideLoading();
         }
       });
@@ -132,7 +143,7 @@ const useEditCategory = () => {
     showLoading();
     axios({
       method: 'delete',
-      url: `${API_URL}/categories/${item.id}`,
+      url: `${API_URL}/${categories}/${item.id}`,
       headers: {
         'Content-Type': 'application/json',
         Authorization: `Bearer ${accessToken}`,
@@ -143,7 +154,11 @@ const useEditCategory = () => {
         hideLoading();
       })
       .catch(function (error) {
-        dispatch(deleteCategory(item));
+        if (type == 'incomes') {
+          dispatch(deleteCategory(item));
+        } else {
+          dispatch(deleteExpenseCategory(item));
+        }
         navigation.goBack();
         hideLoading();
       });

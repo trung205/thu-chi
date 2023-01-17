@@ -9,11 +9,14 @@ export type RootStackParamList = {
   [SCREENS.CATEGORIES]: {
     isBack: boolean;
   };
-  [SCREENS.CREATE_CATEGORY]: undefined;
+  [SCREENS.CREATE_CATEGORY]: {
+    key: 'incomes' | 'expenses'
+  };
   [SCREENS.CATEGORIES_EXPENSE]: undefined;
   [SCREENS.CATEGORIES_INCOME]: undefined;
   [SCREENS.EDIT_CATEGORY]: {
     item: Category;
+    key: 'incomes' | 'expenses';
   };
   [SCREENS.CREATE_COST]: undefined;
   [SCREENS.EDIT_COST]: {

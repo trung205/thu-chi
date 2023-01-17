@@ -1,15 +1,20 @@
 import {API_URL} from '@constants';
 import {useLoading} from '@hooks';
-import {useNavigation} from '@react-navigation/native';
-import {addCategory, hideAlert, RootState, showAlert} from '@redux';
+import {useNavigation, useRoute} from '@react-navigation/native';
+import {addCategory, addExpenseCategory, hideAlert, RootState, showAlert} from '@redux';
 import axios from 'axios';
 import {useFormik} from 'formik';
 import {useDispatch, useSelector} from 'react-redux';
 import * as Yup from 'yup';
 const useCreateCategory = () => {
   const navigation = useNavigation();
+  const route = useRoute<any>();
   const dispatch = useDispatch();
   const {showLoading, hideLoading} = useLoading();
+
+  // params
+  const type = route?.params?.key;
+  const categories = type == 'incomes' ? 'income-categories' : 'expense-categories';
 
   // Redux state
   const accessToken = useSelector(
@@ -62,7 +67,7 @@ const useCreateCategory = () => {
     showLoading();
     axios
       .post(
-        `${API_URL}/categories`,
+        `${API_URL}/${categories}`,
         {
           name: value,
         },
@@ -71,7 +76,11 @@ const useCreateCategory = () => {
         },
       )
       .then(function (response) {
-        dispatch(addCategory(response.data));
+        if (type == 'incomes') {
+          dispatch(addCategory(response.data));
+        } else {
+          dispatch(addExpenseCategory(response.data))
+        }
         navigation.goBack();
         hideLoading();
       })
@@ -90,6 +99,7 @@ const useCreateCategory = () => {
           );
           hideLoading();
         } else {
+          console.log(error)
           hideLoading();
         }
       });

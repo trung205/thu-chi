@@ -32,9 +32,11 @@ const useChart = () => {
   const refChooseYear = useRef<Modalize>();
   const refChooseMonthYear = useRef<Modalize>();
   const [visibleDatePicker, setVisbleDatePicker] = useState(false);
-  const [type, setType] = useState(ChartType.ALL);
+  const [type, setType] = useState(ChartType.INCOMES);
   const [filter, setFilter] = useState(ChartFilter.MONTHS);
   const {showLoading, hideLoading} = useLoading();
+  const [typeUrl, setTypeUrl] = useState('income')
+  const [dataObj, setDataObj] = useState(<any>{})
 
   //  Redux state
   const accessToken = useSelector(
@@ -62,10 +64,10 @@ const useChart = () => {
       label: 'Chi tiêu',
       key: ChartType.EXPENSES,
     },
-    {
-      label: 'Thu nhập & Chi tiêu',
-      key: ChartType.ALL,
-    },
+    // {
+    //   label: 'Thu nhập & Chi tiêu',
+    //   key: ChartType.ALL,
+    // },
   ];
 
   const dataFiler = [
@@ -110,6 +112,17 @@ const useChart = () => {
   const onPressItemTypePicker = (item: {label: string; key: ChartType}) => {
     refType.current?.close();
     setType(item.key);
+    switch (item.key) {
+      case ChartType.INCOMES:
+        setTypeUrl('income')
+        break;
+      case ChartType.EXPENSES:
+        setTypeUrl('expense')
+        break;
+      case ChartType.ALL:
+        setTypeUrl('common')
+        break;
+    }
   };
 
   const showFilter = () => {
@@ -157,6 +170,7 @@ const useChart = () => {
   };
 
   const [dataChart, setDataChart] = useState<DataChart[]>([]);
+  const [pieValue, setPieValue] = useState<any[]>([]);
 
   const renderFieldDate = () => {
     switch (filter) {
@@ -191,7 +205,7 @@ const useChart = () => {
 
   const getStatisticMonth = (input: InputData) => {
     return axios
-      .get(`${API_URL}/statistic`, {
+      .get(`${API_URL}/statistic/income`, {
         headers: {Authorization: `Bearer ${accessToken}`},
         params: input,
       })
@@ -232,15 +246,88 @@ const useChart = () => {
 
   useEffect(() => {
     if (filter == ChartFilter.YEARS) {
-      getStatisticAYear();
+      console.log(moment(`${valueYear}`, 'YYYY')
+      .startOf('year')
+      .format('YYYY-MM-DD'), moment(`${valueYear}`, 'YYYY')
+      .endOf('year')
+      .format('YYYY-MM-DD'))
+      // getStatisticAYear();
+      setPieValue([]);
+      showLoading();
+      axios
+        .get(`${API_URL}/statistic/${typeUrl}`, {
+          headers: {Authorization: `Bearer ${accessToken}`},
+          params: {
+            start_date: moment(`${valueYear}`, 'YYYY')
+            .startOf('year')
+            .format('YYYY-MM-DD'),
+            end_date: moment(`${valueYear}`, 'YYYY')
+            .endOf('year')
+            .format('YYYY-MM-DD'),
+          },
+        })
+        .then(function (response) {
+          const result: any[] = response.data;
+          let newArray: any[] = [];
+          for (const key in result) {
+            if (key !== 'total_incomes' && key !== 'total_expenses' && result[key] !== 0) {
+              let newObj: any ={
+                value: result[key],
+                label: key
+              }
+              newArray.push(newObj);
+            }
+          }
+          setPieValue(newArray)
+          setDataObj({...response.data, total: response.data.total_incomes || response.data.total_expenses})
+          hideLoading();
+        })
+        .catch(function (error) {
+          hideLoading();
+        });
     }
-  }, [filter, valueYear]);
+  }, [filter, valueYear, type]);
+
+  // useEffect(() => {
+  //   if (filter !== ChartFilter.YEARS) {
+  //     showLoading();
+  //     axios
+  //       .get(`${API_URL}/statistic`, {
+  //         headers: {Authorization: `Bearer ${accessToken}`},
+  //         params: {
+  //           start_date: getValueStartDate(),
+  //           end_date: getValueEndDate(),
+  //         },
+  //       })
+  //       .then(function (response) {
+  //         const result: Statistic[] = response.data.data;
+  //         let newArray: DataChart[] = [];
+  //         result.map(e => {
+  //           let newObj: DataChart = {
+  //             incomes: e.total_incomes,
+  //             expenses: e.total_expenses,
+  //             label:
+  //               filter == ChartFilter.DATES
+  //                 ? moment(e.date, 'YYYY-MM-DD').format('DD/MM')
+  //                 : moment(e.date, 'YYYY-MM-DD').format('DD'),
+  //           };
+  //           newArray.push(newObj);
+  //         });
+  //         setDataChart(newArray);
+  //         hideLoading();
+  //       })
+  //       .catch(function (error) {
+  //         hideLoading();
+  //       });
+  //   }
+  // }, [filter, valueMonthYear, startDate, endDate]);
 
   useEffect(() => {
     if (filter !== ChartFilter.YEARS) {
+      setPieValue([]);
       showLoading();
       axios
-        .get(`${API_URL}/statistic`, {
+        .get(`${API_URL}/statistic/${typeUrl}`, {
           headers: {Authorization: `Bearer ${accessToken}`},
           params: {
             start_date: getValueStartDate(),
@@ -248,27 +335,26 @@ const useChart = () => {
           },
         })
         .then(function (response) {
-          const result: Statistic[] = response.data.data;
-          let newArray: DataChart[] = [];
-          result.map(e => {
-            let newObj: DataChart = {
-              incomes: e.total_incomes,
-              expenses: e.total_expenses,
-              label:
-                filter == ChartFilter.DATES
-                  ? moment(e.date, 'YYYY-MM-DD').format('DD/MM')
-                  : moment(e.date, 'YYYY-MM-DD').format('DD'),
-            };
-            newArray.push(newObj);
-          });
-          setDataChart(newArray);
+          const result: any[] = response.data;
+          let newArray: any[] = [];
+          for (const key in result) {
+            if (key !== 'total_incomes' && key !== 'total_expenses' && result[key] !== 0) {
+              let newObj: any ={
+                value: result[key],
+                label: key
+              }
+              newArray.push(newObj);
+            }
+          }
+          setPieValue(newArray)
+          setDataObj({...response.data, total: response.data.total_incomes || response.data.total_expenses})
           hideLoading();
         })
         .catch(function (error) {
           hideLoading();
         });
     }
-  }, [filter, valueMonthYear, startDate, endDate]);
+  }, [filter, valueMonthYear, startDate, endDate, type]);
 
   return {
     refType,
@@ -301,6 +387,8 @@ const useChart = () => {
     setEndDate,
     startDate,
     setStartDate,
+    pieValue,
+    dataObj
   };
 };
 export default useChart;
