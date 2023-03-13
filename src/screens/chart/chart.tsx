@@ -13,6 +13,7 @@ import { Modalize } from 'react-native-modalize';
 import useChart from './hook';
 import { styles } from './styles';
 import PureChart from 'react-native-pure-chart';
+import { decryptData } from '@hooks';
 
 export const Chart: React.FC = () => {
   const {
@@ -50,18 +51,7 @@ export const Chart: React.FC = () => {
     pieValue,
     dataObj
   } = useChart();
-  let sampleData = [
-    {
-      value: 50,
-      label: 'Marketing',
-    }, {
-      value: 40,
-      label: 'Sales',
-    }, {
-      value: 25,
-      label: 'Support',
-    },
-  ]
+
   const colors = ['#009ef2', '#ff4d7d', '#00c4c3', '#ffd12f', '#e7e9ed']
   const renderTypePicker = () => {
     return (
@@ -143,7 +133,7 @@ export const Chart: React.FC = () => {
               <View style={{ flexDirection: 'row', paddingVertical: 5, width: 230, justifyContent: 'space-between' }}>
                 <View style={{ flexDirection: 'row' }}>
                   <View style={{ width: 30, height: 20, backgroundColor: colors[index % (colors.length - 1)], marginRight: 10 }} />
-                  <Text numberOfLines={1}>{item.label}</Text>
+                  <Text numberOfLines={1}>{decryptData(item.label)}</Text>
                 </View>
                 <Text>{new Intl.NumberFormat().format(item.value)} vnđ</Text>
               </View>

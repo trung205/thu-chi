@@ -1,5 +1,5 @@
 import {API_URL} from '@constants';
-import {useLoading} from '@hooks';
+import {decryptData, encryptData, useLoading} from '@hooks';
 import {EditCategoryRouteProp} from '@navigation';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {
@@ -35,8 +35,9 @@ const useEditCategory = () => {
   // ...rest
 
   const initialValues = {
-    name: item.name,
+    name: decryptData(item.name),
   };
+  
   const validationSchema = Yup.object().shape({
     name: Yup.string().trim().required('Bắt buộc nhập'),
   });
@@ -84,7 +85,7 @@ const useEditCategory = () => {
       .put(
         `${API_URL}/${categories}/${item.id}`,
         {
-          name: value,
+          name: encryptData(value),
         },
         {
           headers: {Authorization: `Bearer ${accessToken}`},

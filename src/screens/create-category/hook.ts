@@ -1,5 +1,5 @@
 import {API_URL} from '@constants';
-import {useLoading} from '@hooks';
+import {encryptData, useLoading} from '@hooks';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {addCategory, addExpenseCategory, hideAlert, RootState, showAlert} from '@redux';
 import axios from 'axios';
@@ -65,11 +65,12 @@ const useCreateCategory = () => {
 
   const callApi = (value: string) => {
     showLoading();
+    let valueEncrypt = encryptData(value);
     axios
       .post(
         `${API_URL}/${categories}`,
         {
-          name: value,
+          name: valueEncrypt,
         },
         {
           headers: {Authorization: `Bearer ${accessToken}`},

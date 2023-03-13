@@ -5,6 +5,7 @@ import React from 'react';
 import {FlatList, TouchableOpacity} from 'react-native';
 import {styles} from './styles';
 import useCategories from './hook';
+import { decryptData } from '@hooks';
 
 export const IncomeCategories: React.FC = () => {
   const navigation = useNavigation<any>();
@@ -24,7 +25,7 @@ export const IncomeCategories: React.FC = () => {
                 onPressItem(item);
               }}
               style={styles.item}>
-              <Text>{item.name}</Text>
+              <Text>{decryptData(item.name)}</Text>
             </TouchableOpacity>
           );
         }}

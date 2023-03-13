@@ -1,5 +1,5 @@
 import {API_URL, SCREENS} from '@constants';
-import {useLoading} from '@hooks';
+import {decryptData, encryptData, useLoading} from '@hooks';
 import {EditCostRouteProp} from '@navigation';
 import {useNavigation, useRoute} from '@react-navigation/native';
 import {
@@ -26,9 +26,11 @@ const useEditCost = () => {
   const {item, key} = route.params;
 
   // Redux state
-  const categories =  key == 'incomes' ? useSelector((state: RootState) => state.categories.data) : useSelector((state: RootState) => state?.expenseCategories?.data);
+  let categories =  key == 'incomes' ? useSelector((state: RootState) => state.categories.data) : useSelector((state: RootState) => state?.expenseCategories?.data);
   // const expenseCategories = useSelector((state: RootState) => state?.expenseCategories?.data);
-
+  categories = categories.map((item: any) => {
+    return {...item, name: decryptData(item.name)};
+  })
   const accessToken = useSelector(
     (state: RootState) => state.user.token.access,
   );
@@ -40,7 +42,7 @@ const useEditCost = () => {
 
   const initialValues = {
     category: key == 'incomes' ? item.income_category_id : item.expense_category_id,
-    description: item?.description,
+    description: decryptData(item?.description),
     date: item?.date,
     amount: item.amount.toString(),
   };
@@ -82,7 +84,7 @@ const useEditCost = () => {
         `${API_URL}/incomes/${item.id}`,
         {
           category_id: values.category,
-          description: values.description,
+          description: encryptData(values.description),
           amount: values.amount,
           date: values.date,
         },
@@ -107,7 +109,7 @@ const useEditCost = () => {
         `${API_URL}/expenses/${item.id}`,
         {
           category_id: values.category,
-          description: values.description,
+          description: encryptData(values.description),
           amount: values.amount,
           date: values.date,
         },

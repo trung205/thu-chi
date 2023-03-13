@@ -1,4 +1,5 @@
 import {Text} from '@components';
+import { decryptData } from '@hooks';
 import {palette} from '@styles';
 import {Category, Cost} from '@types';
 import moment from 'moment';
@@ -39,8 +40,8 @@ export const ItemCost: React.FC<ItemCostProps> = ({
   return (
     <TouchableOpacity onPress={onPress} style={styles.container}>
       <View style={styles.viewLeft}>
-        <Text>{category?.name}</Text>
-        <Text color={'secondary-text'}>{item.description}</Text>
+        <Text>{decryptData(category?.name)}</Text>
+        <Text color={'secondary-text'}>{decryptData(item.description)}</Text>
       </View>
       <View style={styles.viewRight}>
         <Text>{moment(item.date, 'YYYY-MM-DD').format('DD/MM/YYYY')}</Text>

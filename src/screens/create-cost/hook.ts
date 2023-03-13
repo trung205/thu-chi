@@ -1,5 +1,5 @@
 import {API_URL, SCREENS} from '@constants';
-import {useLoading} from '@hooks';
+import {decryptData, encryptData, useLoading} from '@hooks';
 import {useNavigation} from '@react-navigation/native';
 import {addExpense, addIncome, hideAlert, RootState, showAlert} from '@redux';
 import axios from 'axios';
@@ -14,9 +14,16 @@ const useCreateCost = () => {
   );
   const {showLoading, hideLoading} = useLoading();
 
-  const categories = useSelector((state: RootState) => state.categories.data);
-  const expenseCategories = useSelector((state: RootState) => state?.expenseCategories?.data);
+  let categories = useSelector((state: RootState) => state.categories.data);
+  let expenseCategories = useSelector((state: RootState) => state?.expenseCategories?.data);
 
+  categories = categories.map((item: any) => {
+    return {...item, name: decryptData(item.name)};
+  })
+
+  expenseCategories = expenseCategories.map((item: any) => {
+    return {...item, name: decryptData(item.name)};
+  })
 
   const initialValues = {
     type: '',
@@ -62,7 +69,7 @@ const useCreateCost = () => {
         `${API_URL}/incomes`,
         {
           income_category_id: values.category,
-          description: values.description,
+          description: encryptData(values.description),
           amount: values.amount,
           date: values.date,
         },
@@ -77,7 +84,7 @@ const useCreateCost = () => {
       })
       .catch(function (error) {
         // console.log('error');
-        // console.log(error);
+        console.log(error);
         hideLoading();
       });
   };
@@ -89,7 +96,7 @@ const useCreateCost = () => {
         `${API_URL}/expenses`,
         {
           expense_category_id: values.category,
-          description: values.description,
+          description: encryptData(values.description),
           amount: values.amount,
           date: values.date,
         },
