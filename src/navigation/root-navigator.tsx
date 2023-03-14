@@ -27,7 +27,7 @@ export const RootNavigator = () => {
   );
   return (
     <Stack.Navigator
-      initialRouteName={checkIsSignedIn ? SCREENS.BOTTOM_TAB : SCREENS.SIGN_IN}
+      initialRouteName={SCREENS.SIGN_IN}
       screenOptions={{headerShown: false, gestureEnabled: false}}>
       <Stack.Group>
         <Stack.Screen name={SCREENS.SIGN_IN} component={SignIn} />

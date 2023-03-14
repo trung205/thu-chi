@@ -1,5 +1,5 @@
 import {API_URL, SCREENS} from '@constants';
-import {useLoading} from '@hooks';
+import { useLoading} from '@hooks';
 import {useNavigation} from '@react-navigation/native';
 import {addInformation, IUser} from '@redux';
 import {dismissKeyboard} from '@utils';

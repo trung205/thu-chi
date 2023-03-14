@@ -1,5 +1,6 @@
 package com.managerexpend;
 
+import com.hieuvp.fingerprint.ReactNativeFingerprintScannerPackage;
 import android.app.Application;
 import android.content.Context;
 import com.facebook.react.PackageList;

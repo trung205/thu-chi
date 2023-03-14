@@ -1,13 +1,15 @@
+import { RootState } from "@redux";
 import CryptoJS from "react-native-crypto-js";
- 
-let aesKey = 'abcdef123456abcd' 
+import { useSelector } from "react-redux";
+import {AES_KEY} from '@env'
+
 // Encrypt
 export const encryptData = (data: any) => {
-    return CryptoJS.AES.encrypt(data, aesKey).toString();
+    return CryptoJS.AES.encrypt(data, AES_KEY).toString();
 }
 // Decrypt
 export const decryptData = (cipher: any) => {
-    let bytes  = CryptoJS.AES.decrypt(cipher, aesKey);
+    let bytes  = CryptoJS.AES.decrypt(cipher, AES_KEY);
     let originalText = bytes.toString(CryptoJS.enc.Utf8);
     return originalText;
 }

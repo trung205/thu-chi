@@ -19,6 +19,7 @@
       "@data":["./src/data"]
     } ,
     /* Completeness */
-    "skipLibCheck": true                                 /* Skip type checking all .d.ts files. */
+    "skipLibCheck": true  ,
+    "typeRoots": ["./src/types/"]                               /* Skip type checking all .d.ts files. */
   }
 }

@@ -6,12 +6,13 @@ import {dismissKeyboard} from '@utils';
 import axios from 'axios';
 import {useFormik} from 'formik';
 import {useDispatch} from 'react-redux';
+import FingerprintScanner from 'react-native-fingerprint-scanner';
 import * as Yup from 'yup';
+import { useState } from 'react';
 const useSignIn = () => {
   const navigation = useNavigation<any>();
   const dispatch = useDispatch();
   const {showLoading, hideLoading} = useLoading();
-
   const initialValues = {email: '', password: ''};
   const validationSchema = Yup.object().shape({
     email: Yup.string().email('Sai định dạng email!').required('Bắt buộc nhập'),
@@ -51,29 +52,41 @@ const useSignIn = () => {
   };
 
   const callApi = () => {
-    showLoading();
-    axios
-      .post(`${API_URL}/token/auth`, {
-        email: values.email,
-        password: values.password,
+    FingerprintScanner
+      .authenticate({ title: 'Xác thực bằng vân tay' })
+      .then(() => {
+        console.log('Xác thực thành công');
+        // Chuyển người dùng đến màn hình chính của ứng dụng ở đây
+        showLoading();
+        axios
+          .post(`${API_URL}/token/auth`, {
+            email: values?.email,
+            password: values?.password,
+          })
+          .then(function (response) {
+            const result = response.data;
+            getInformation(result.access, result.refresh);
+    
+          })
+          .catch(function (error) {
+            hideLoading();
+            dispatch(
+              showAlert({
+                visible: true,
+                title: 'Thông báo',
+                message: 'Vui lòng kiểm tra lại!',
+                icon: 'error',
+                onPositiveButton: () => {
+                  dispatch(hideAlert());
+                },
+              }),
+            );
+          });
       })
-      .then(function (response) {
-        const result = response.data;
-        getInformation(result.access, result.refresh);
-      })
-      .catch(function (error) {
-        hideLoading();
-        dispatch(
-          showAlert({
-            visible: true,
-            title: 'Thông báo',
-            message: 'Vui lòng kiểm tra lại!',
-            icon: 'error',
-            onPositiveButton: () => {
-              dispatch(hideAlert());
-            },
-          }),
-        );
+      .catch((error) => {
+        console.log('Xác thực thất bại', error);
+      }).finally(() => {
+        FingerprintScanner.release()
       });
   };
 
